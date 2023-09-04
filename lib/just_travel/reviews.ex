@@ -24,8 +24,6 @@ defmodule JustTravel.Reviews do
   @doc """
   Gets a single review.
 
-  Raises `Ecto.NoResultsError` if the Review does not exist.
-
   ## Examples
 
       iex> get_review(123)
