@@ -6,13 +6,14 @@ defmodule JustTravel.TicketsTest do
   describe "tickets" do
     alias JustTravel.Tickets.Ticket
 
-    import JustTravel.TicketsFixtures
+    import JustTravel.{LocationsFixtures, TicketsFixtures}
 
-    @invalid_attrs %{name: nil, date: nil, description: nil}
+    @invalid_attrs %{name: nil, date: nil, description: nil, price: nil, location_id: nil}
 
     setup do
-      ticket = ticket_fixture()
-      {:ok, ticket: ticket}
+      location = location_fixture()
+      ticket = ticket_fixture(location_id: location.id)
+      {:ok, ticket: ticket, location: location}
     end
 
     test "list_tickets/0 returns all tickets", %{ticket: ticket} do
@@ -23,16 +24,16 @@ defmodule JustTravel.TicketsTest do
       assert Tickets.get_ticket(ticket.id) == {:ok, ticket}
     end
 
-    test "create_ticket/1 with valid data creates a ticket" do
+    test "create_ticket/1 with valid data creates a ticket", %{location: location} do
       valid_attrs = %{
         name: "some name",
         date: ~D[2023-09-03],
         description: "some description",
-        price: 100.0
+        price: 100.0,
+        location_id: location.id
       }
 
       assert {:ok, %Ticket{} = ticket} = Tickets.create_ticket(valid_attrs)
-      IO.inspect(ticket)
       assert ticket.name == "some name"
       assert ticket.date == ~D[2023-09-03]
       assert ticket.description == "some description"
@@ -46,16 +47,18 @@ defmodule JustTravel.TicketsTest do
                name: ["can't be blank"],
                date: ["can't be blank"],
                description: ["can't be blank"],
-               price: ["can't be blank"]
+               price: ["can't be blank"],
+               location_id: ["can't be blank"]
              }
     end
 
-    test "create_ticket/1 with price less than 0 returns error changeset" do
+    test "create_ticket/1 with price less than 0 returns error changeset", %{location: location} do
       invalid_attrs = %{
         name: "some name",
         date: ~D[2023-09-03],
         description: "some description",
-        price: -100.0
+        price: -100.0,
+        location_id: location.id
       }
 
       assert {:error, %Ecto.Changeset{} = changeset} = Tickets.create_ticket(invalid_attrs)
