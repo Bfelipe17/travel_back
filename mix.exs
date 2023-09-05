@@ -9,7 +9,14 @@ defmodule JustTravel.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 
@@ -45,7 +52,14 @@ defmodule JustTravel.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:decimal, "~> 2.0"},
-      {:geo_postgis, "~> 3.4"}
+      {:geo_postgis, "~> 3.4"},
+      {:absinthe, "~> 1.7.0"},
+      {:absinthe_plug, "~> 1.5"},
+      {:absinthe_relay, "~> 1.5.0"},
+      {:cors_plug, "~> 3.0"},
+      {:paginator, "~> 1.2.0"},
+      {:excoveralls, "~> 0.10", only: :test},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
     ]
   end
 
