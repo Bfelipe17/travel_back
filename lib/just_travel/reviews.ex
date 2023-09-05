@@ -55,7 +55,7 @@ defmodule JustTravel.Reviews do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_review(attrs \\ %{}) do
+  def create_review(attrs) do
     %Review{}
     |> Review.changeset(attrs)
     |> Repo.insert()
