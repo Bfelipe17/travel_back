@@ -1,4 +1,5 @@
 defmodule JustTravel.Reviews.Review do
+  @moduledoc false
   use Ecto.Schema
   import Ecto.Changeset
   alias JustTravel.Tickets.Ticket
