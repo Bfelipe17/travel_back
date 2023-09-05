@@ -6,6 +6,7 @@ config :just_travel, JustTravel.Repo,
   password: "postgres",
   hostname: "localhost",
   database: "just_travel_dev",
+  types: JustTravel.PostgresTypes,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10

@@ -10,6 +10,7 @@ config :just_travel, JustTravel.Repo,
   password: "postgres",
   hostname: "localhost",
   database: "just_travel_test#{System.get_env("MIX_TEST_PARTITION")}",
+  types: JustTravel.PostgresTypes,
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 
