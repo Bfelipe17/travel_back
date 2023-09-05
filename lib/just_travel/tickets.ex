@@ -17,8 +17,19 @@ defmodule JustTravel.Tickets do
       [%Ticket{}, ...]
 
   """
-  def list_tickets do
-    Repo.all(Ticket)
+  def list_tickets(limit \\ 10, before_cursor \\ nil, after_cursor \\ nil) do
+    Ticket
+    |> join(:left, [t], r in assoc(t, :reviews))
+    |> group_by([t], t.id)
+    |> preload([:location])
+    |> select([t, r], %{t | review_average: %{score: avg(r.score), total: count(r.id)}})
+    |> Repo.paginate(
+      include_total_count: true,
+      before: before_cursor,
+      after: after_cursor,
+      cursor_fields: [:inserted_at, :id],
+      limit: limit
+    )
   end
 
   @doc """
@@ -34,12 +45,16 @@ defmodule JustTravel.Tickets do
 
   """
   def get_ticket(id) do
-    case Repo.get(Ticket, id) do
-      nil ->
-        {:error, "Ticket not found"}
-
-      ticket ->
-        {:ok, ticket}
+    Ticket
+    |> where([t], t.id == ^id)
+    |> join(:left, [t], r in assoc(t, :reviews))
+    |> group_by([t], t.id)
+    |> preload([:location])
+    |> select([t, r], %{t | review_average: %{score: avg(r.score), total: count(r.id)}})
+    |> Repo.one()
+    |> case do
+      nil -> {:error, "Ticket not found"}
+      ticket -> {:ok, ticket}
     end
   end
 
@@ -55,7 +70,7 @@ defmodule JustTravel.Tickets do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_ticket(attrs \\ %{}) do
+  def create_ticket(attrs) do
     %Ticket{}
     |> Ticket.changeset(attrs)
     |> Repo.insert()
