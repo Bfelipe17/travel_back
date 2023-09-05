@@ -6,12 +6,13 @@ defmodule JustTravel.ReviewsTest do
   describe "reviews" do
     alias JustTravel.Reviews.Review
 
-    import JustTravel.{ReviewsFixtures, TicketsFixtures}
+    import JustTravel.{LocationsFixtures, ReviewsFixtures, TicketsFixtures}
 
     @invalid_attrs %{comment: nil, score: nil}
 
     setup do
-      ticket = ticket_fixture()
+      location = location_fixture()
+      ticket = ticket_fixture(location_id: location.id)
       review = review_fixture(ticket_id: ticket.id)
       {:ok, ticket: ticket, review: review}
     end

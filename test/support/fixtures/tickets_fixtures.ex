@@ -14,7 +14,9 @@ defmodule JustTravel.TicketsFixtures do
         name: "some name",
         date: ~D[2023-09-03],
         description: "some description",
-        price: 100.0
+        image: "/images/image.jpg",
+        price: 100.0,
+        adults: 2
       })
       |> JustTravel.Tickets.create_ticket()
 
