@@ -40,6 +40,13 @@ defmodule JustTravel.Locations do
     end
   end
 
+  def search_location_by_name(location_name) do
+    Location
+    |> where([l], ilike(l.name, ^"%#{location_name}%"))
+    |> preload(:tickets)
+    |> Repo.all()
+  end
+
   @doc """
   Creates a location.
 
@@ -52,7 +59,7 @@ defmodule JustTravel.Locations do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_location(attrs \\ %{}) do
+  def create_location(attrs) do
     %Location{}
     |> Location.changeset(attrs)
     |> Repo.insert()
