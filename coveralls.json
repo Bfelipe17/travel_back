@@ -1,0 +1,6 @@
+{
+  "skip_files": [
+    "deps",
+    "lib/just_travel_web/router.ex"
+  ]
+}
