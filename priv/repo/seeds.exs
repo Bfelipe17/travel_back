@@ -10,7 +10,7 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-alias JustTravel.{Locations.Location, Tickets.Ticket, Repo}
+alias JustTravel.{Carts.Cart, Locations.Location, Tickets.Ticket, Repo}
 
 new_york_location = %Location{
   name: "New York",
@@ -30,6 +30,7 @@ rio_de_janeiro_location = %Location{
 new_york_location = Repo.insert!(new_york_location)
 sao_paulo_location = Repo.insert!(sao_paulo_location)
 rio_de_janeiro_location = Repo.insert!(rio_de_janeiro_location)
+Repo.insert!(%Cart{})
 
 ticket = %Ticket{
   name: "Statue of Liberty",

@@ -14,17 +14,19 @@ defmodule JustTravel.Carts do
 
   ## Examples
 
-      iex> get_cart(123)
+      iex> get_cart()
       {:ok, %Cart{}}
 
       iex> get_cart
       {:error, "Cart not found"}
 
   """
-  def get_cart(id) do
-    case Repo.get(Cart, id) do
+  def get_cart do
+    Cart
+    |> Repo.one()
+    |> case do
       nil -> {:error, "Cart not found"}
-      cart -> {:ok, cart |> Repo.preload([:cart_items, [cart_items: :ticket]])}
+      cart -> {:ok, cart |> Repo.preload([:cart_items])}
     end
   end
 
@@ -65,8 +67,8 @@ defmodule JustTravel.Carts do
     {:error, "Item not found"}
 
   """
-  def add_item_to_cart(%{cart_id: cart_id, ticket_id: ticket_id}) do
-    with {:ok, cart} <- get_cart(cart_id),
+  def add_item_to_cart(%{cart_id: _cart_id, ticket_id: ticket_id}) do
+    with {:ok, cart} <- get_cart(),
          {:ok, ticket} <- JustTravel.Tickets.get_ticket(ticket_id) do
       case get_item_by_ticket_id(cart.id, ticket.id) do
         nil -> create_item(%{cart_id: cart.id, ticket_id: ticket.id})
@@ -92,8 +94,8 @@ defmodule JustTravel.Carts do
 
   def remove_item_from_cart(item_id) do
     with {:ok, item} <- get_item(item_id),
-         {:ok, item} <- Repo.delete(item) do
-          get_cart(item.cart_id)
+         {:ok, _item} <- Repo.delete(item) do
+          get_cart()
     end
   end
 end

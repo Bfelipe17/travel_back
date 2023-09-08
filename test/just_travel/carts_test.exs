@@ -14,13 +14,13 @@ defmodule JustTravel.CartsTest do
       {:ok, cart: cart}
     end
 
-    test "get_cart/1 return the cart if exists", %{cart: cart} do
-      assert {:ok, %Cart{}} = Carts.get_cart(cart.id)
+    test "get_cart/0 return the cart if exists", %{cart: _cart} do
+      assert {:ok, %Cart{}} = Carts.get_cart()
     end
 
-    test "get_cart/1 return error if cart does not exists" do
-      id = Ecto.UUID.generate()
-      assert {:error, "Cart not found"} = Carts.get_cart(id)
+    test "get_cart/0 return error if cart does not exists" do
+      Repo.delete_all(Cart)
+      assert {:error, "Cart not found"} = Carts.get_cart()
     end
 
     test "add_item_to_cart/1 with valid data insert the item into the cart", %{cart: cart} do
@@ -38,19 +38,19 @@ defmodule JustTravel.CartsTest do
       assert {:ok, %Item{}} =
                Carts.add_item_to_cart(%{cart_id: cart.id, ticket_id: ticket.id})
 
-      {:ok, %Cart{cart_items: [%Item{quantity: quantity}]}} = Carts.get_cart(cart.id)
+      {:ok, %Cart{cart_items: [%Item{quantity: quantity}]}} = Carts.get_cart()
       assert quantity == 1
 
       assert {:ok, %Item{}} =
                Carts.add_item_to_cart(%{cart_id: cart.id, ticket_id: ticket.id})
 
-      {:ok, %Cart{cart_items: [%Item{quantity: quantity}]}} = Carts.get_cart(cart.id)
+      {:ok, %Cart{cart_items: [%Item{quantity: quantity}]}} = Carts.get_cart()
       assert quantity == 2
 
       assert {:ok, %Item{}} =
                Carts.add_item_to_cart(%{cart_id: cart.id, ticket_id: ticket.id})
 
-      {:ok, %Cart{cart_items: [%Item{quantity: quantity}]}} = Carts.get_cart(cart.id)
+      {:ok, %Cart{cart_items: [%Item{quantity: quantity}]}} = Carts.get_cart()
       assert quantity == 3
     end
 
@@ -79,12 +79,12 @@ defmodule JustTravel.CartsTest do
       assert {:ok, %Item{} = item} =
                Carts.add_item_to_cart(%{cart_id: cart.id, ticket_id: ticket.id})
 
-      {:ok, cart} = Carts.get_cart(cart.id)
+      {:ok, cart} = Carts.get_cart()
 
       assert length(cart.cart_items) == 1
 
       assert {:ok, _item} = Carts.remove_item_from_cart(item.id)
-      {:ok, cart} = Carts.get_cart(cart.id)
+      {:ok, cart} = Carts.get_cart()
       assert Enum.empty?(cart.cart_items)
     end
 
